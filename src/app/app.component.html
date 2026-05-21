@@ -1,37 +1,86 @@
-<form [formGroup]="emailForm" class="contactForm">
-  <div id="sendmessage">Your message has been sent. Thank you!</div>
-  <div id="errormessage"></div>
-  <div class="row">
-    <div class="col-md-12 mb-3">
-      <div class="form-group">
-        <input type="text" formControlName="name" class="form-control" id="name" placeholder="Your Name"
-          data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
-        <div class="validation"></div>
-      </div>
+<form [formGroup]="emailForm" (ngSubmit)="sendEmail()" class="contact-form" novalidate>
+
+  @if (sent) {
+    <div class="form-success" role="alert">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      Message sent! I'll get back to you soon.
     </div>
-    <div class="col-md-12 mb-3">
-      <div class="form-group">
-        <input type="email" class="form-control" formControlName="email" id="email" placeholder="Your Email"
-          data-rule="email" data-msg="Please enter a valid email" />
-        <div class="validation"></div>
-      </div>
+  }
+
+  @if (sendError) {
+    <div class="form-error-msg" role="alert">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+      Something went wrong. Please email me directly.
     </div>
-    <div class="col-md-12 mb-3">
-      <div class="form-group">
-        <input type="text" class="form-control" formControlName="phoneNumber" id="phoneNumber"
-          placeholder="Phone Number" data-msg="Please enter at least 8 chars of subject" />
-        <div class="validation"></div>
-      </div>
-    </div>
-    <div class="col-md-12 mb-3">
-      <div class="form-group">
-        <textarea class="form-control" formControlName="message" rows="5" data-rule="required"
-          data-msg="Please write something for us" placeholder="Message"></textarea>
-        <div class="validation"></div>
-      </div>
-    </div>
-    <div class="col-md-12">
-      <button class="button button-a button-big button-rouded" (click)="sendEmail()">Send Message</button>
-    </div>
+  }
+
+  <div class="form-field">
+    <label for="name" class="form-label">Full name *</label>
+    <input
+      type="text"
+      id="name"
+      formControlName="name"
+      class="form-input"
+      [class.invalid]="f['name'].invalid && f['name'].touched"
+      placeholder="Your full name"
+      autocomplete="name"
+    >
+    @if (f['name'].invalid && f['name'].touched) {
+      <span class="field-error" role="alert">Please enter your name (min. 2 characters)</span>
+    }
   </div>
+
+  <div class="form-field">
+    <label for="email" class="form-label">Email address *</label>
+    <input
+      type="email"
+      id="email"
+      formControlName="email"
+      class="form-input"
+      [class.invalid]="f['email'].invalid && f['email'].touched"
+      placeholder="you@example.com"
+      autocomplete="email"
+    >
+    @if (f['email'].invalid && f['email'].touched) {
+      <span class="field-error" role="alert">Please enter a valid email address</span>
+    }
+  </div>
+
+  <div class="form-field">
+    <label for="phoneNumber" class="form-label">Phone <span class="optional">(optional)</span></label>
+    <input
+      type="tel"
+      id="phoneNumber"
+      formControlName="phoneNumber"
+      class="form-input"
+      placeholder="+1 234 567 8900"
+      autocomplete="tel"
+    >
+  </div>
+
+  <div class="form-field">
+    <label for="message" class="form-label">Message *</label>
+    <textarea
+      id="message"
+      formControlName="message"
+      class="form-input form-textarea"
+      [class.invalid]="f['message'].invalid && f['message'].touched"
+      placeholder="Tell me about your project or challenge..."
+      rows="5"
+    ></textarea>
+    @if (f['message'].invalid && f['message'].touched) {
+      <span class="field-error" role="alert">Please enter a message (min. 10 characters)</span>
+    }
+  </div>
+
+  <button type="submit" class="btn btn-primary btn-submit" [disabled]="sending">
+    @if (sending) {
+      <span class="spinner" aria-hidden="true"></span>
+      Sending...
+    } @else {
+      Send message
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    }
+  </button>
+
 </form>

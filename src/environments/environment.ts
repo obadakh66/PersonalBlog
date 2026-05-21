@@ -3,7 +3,11 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  telegram: {
+    botToken: '8243356262:AAFePPhVCPCos51Dplblrl23s5urfccoo0o',
+    chatId: '852434741'
+  }
 };
 
 /*
